@@ -1,42 +1,78 @@
-# Operating-System-University-Project
-FCFS — First Come First Serve SJF — Shortest Job First SRTF — Shortest Remaining Time First Priority Scheduling RR — Round Robin
+# CPU Scheduling Visualizer (University OS Lab)
 
-Act as an expert Full-Stack Python Developer and Operating Systems Instructor. I need you to build a complete, production-ready Streamlit application for my University OS Lab project (worth 20 marks). The app must simulate and visualize 5 CPU Scheduling Algorithms:
+This repository contains a single-file Streamlit application that simulates and visualizes five classic CPU scheduling algorithms for educational use in an Operating Systems lab.
 
-1. FCFS (First Come First Serve)
+Supported algorithms
 
-2. SJF (Shortest Job First - Non-preemptive)
+- FCFS — First-Come, First-Served (non-preemptive)
+- SJF — Shortest Job First (non-preemptive)
+- SRTF — Shortest Remaining Time First (preemptive)
+- Priority Scheduling — preemptive and non-preemptive modes (toggleable ordering)
+- RR — Round Robin (preemptive, configurable time quantum)
 
-3. SRTF (Shortest Remaining Time First - Preemptive)
+What the app provides
 
-4. Priority Scheduling (Support both Preemptive and Non-preemptive modes, with a toggle to define whether lower or higher numbers mean higher priority)
+- Interactive Gantt charts (Plotly) that show process execution blocks and explicit IDLE ranges.
+- Per-process metrics table with AT, BT, Priority (if given), CT, TAT, and WT.
+- Step-by-step human-readable execution trace explaining starts, preemptions, completions, and idle intervals.
+- Explicit formula substitutions for TAT/WT calculations and average statistics (for teaching and grading transparency).
 
-5. RR (Round Robin - Preemptive, requiring a Time Quantum input)
+Quick start
 
-### CRITICAL CORE REQUIREMENTS:
+1. Create a virtual environment (recommended) and install dependencies:
 
-1. THE CORE REWARD METRIC IS DETAILED EXPRESSION: The faculty rewards deep, granular mathematical and logical clarity. The app cannot just show final numbers. It must display:
+```powershell
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
 
-   - Dynamic Gantt Charts: Built using Plotly or clean Altair/Streamlit native containers, clearly showing timeline blocks, idle times, and process context switches.
+2. Run the Streamlit app:
 
-   - Comprehensive Metrics Table: Tracking Process ID, Arrival Time (AT), Burst Time (BT), Priority (if applicable), Completion Time (CT), Turnaround Time (TAT), and Waiting Time (WT) for every process.
+```powershell
+streamlit run app.py
+```
 
-   - Step-by-Step Execution Log/Trace: A sequence breakdown explaining *why* a process was chosen at time 't' (e.g., "At t=3, P2 arrived with shorter remaining time than P1, causing a preemption...").
+UI & input expectations
 
-   - Summary Statistics: Average Turnaround Time and Average Waiting Time, explicitly showing the mathematical formulas and substitution steps used to calculate them.
+- The UI is sidebar-driven. Select an algorithm and enter inputs in the provided form.
+- Inputs are comma-separated lists. Example:
 
-2. ARCHITECTURE & UX (Streamlit Native):
+   - Arrival times: `0,2,4`
+   - Burst times: `5,3,1`
+   - Priorities (optional): `2,1,3`
+   - Time quantum (RR): `2`
 
-   - Home Page / Navigation: Implement a clean sidebar or radio menu to let users easily select an algorithm, with a persistent option to return Home or switch algorithms instantly.
+- The app validates inputs (arrival >= 0, burst > 0) and preserves stable tie-breaking by PID index when values match.
 
-   - Inputs: Users must be able to dynamically add rows for processes, or enter comma-separated values for Arrival Times, Burst Times, and Priorities. Do not hardcode inputs.
+Design & educational choices
 
-   - Visual Styling: Apply a modern, professional, ultra-clean Dark Mode UI using a rich Blue-shade color palette (e.g., deep navy backgrounds, slate sidebar, electric blue accents for active states and Gantt bars). 
+- Time is simulated in integer units. Preemptive algorithms step at 1-unit resolution.
+- Tie-breaking preserves original input order (P1, P2, ...).
+- Priority mode supports both conventions (lower number = higher priority or the opposite) via a toggle.
+- Idle ranges are shown explicitly in the Gantt trace and in the human trace for clarity.
 
-3. EDUCATIONAL RIGOR (Since I am still learning):
+Files of interest
 
-   - Comment the Python code heavily, explaining the logic loops, arrival queue management, and preemption checks.
+- `app.py` — main Streamlit application (UI + simulators). This is a single-file, runnable app.
+- `requirements.txt` — minimal dependencies (Streamlit, pandas, numpy, plotly).
+- `.github/copilot-instructions.md` — guidance for AI coding agents working on this project.
 
-   - For preemptive algorithms (SRTF, RR), explicitly handle edge cases like simultaneous arrivals, CPU idling when no process has arrived, and tracking remaining burst times accurately down to 1-unit time steps.
+Developer notes (simulator contract)
 
+- Input: list of Process records {pid, arrival, burst, remaining, priority?}
+- Output: `trace` (list of timeline segments for Gantt), `completion` times, `human` (ordered trace strings), and `arrivals` map.
+- Edge cases handled: simultaneous arrivals, CPU idling before first arrival, stable tie-breaking, priority toggles, and invalid input validation.
+
+Acknowledgements
+
+This project was implemented with assistance from several AI tools to speed development and ensure clarity: GitHub Copilot, Anthropic Claude, and Google Gemini. The author reviewed and validated all outputs; any remaining errors are the author's responsibility.
+
+License
+
+See the `LICENSE` file in the repository.
+
+If you'd like a shorter or longer README, or a separate `DEVELOPER.md` with implementation details and tests, tell me which format you prefer and I will add it.
 Provide the complete, monolithic `app.py` script so I can directly run it and deploy it to my GitHub repository. Do not use placeholders or omit complex logic loops. Write robust, error-checked, math-accurate code.
+
+
+
